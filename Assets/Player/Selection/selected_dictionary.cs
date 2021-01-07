@@ -6,7 +6,7 @@ public class selected_dictionary : MonoBehaviour
 {
     public Dictionary<int, GameObject> selectedTable = new Dictionary<int, GameObject>();
 
-    public void addSelected(GameObject go)
+    public void invertSelected(GameObject go)
     {
         int id = go.GetInstanceID();
 
@@ -19,6 +19,17 @@ public class selected_dictionary : MonoBehaviour
         else
         {
             deselect(id);
+        }
+    }
+    public void addSelected(GameObject go)
+    {
+        int id = go.GetInstanceID();
+
+        if (!(selectedTable.ContainsKey(id)))
+        {
+            selectedTable.Add(id, go);
+            go.AddComponent<selection_component>();
+            //Debug.Log("Added " + id + " to selected dict");
         }
     }
 

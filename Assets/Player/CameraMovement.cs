@@ -16,6 +16,10 @@ public class CameraMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            Virus.MoveAttack = !Virus.MoveAttack;
+        }
         if (Input.GetMouseButtonDown(1))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -31,15 +35,9 @@ public class CameraMovement : MonoBehaviour
                         NavMeshAgent a = g.GetComponent<NavMeshAgent>();
                         NavMeshPath path = new NavMeshPath();
                         a.CalculatePath(hit.point, path);
-                        if (path.status == NavMeshPathStatus.PathPartial)
-                        {
-
-                        }
-                        else
-                        {
-                            //a.SetPath(path);
-                            a.SetDestination(hit.point);
-                        }
+                            a.SetPath(path);
+                            g.GetComponent<Virus>().controlled = true;
+                        
                     }
                 }
             }

@@ -63,12 +63,12 @@ public class global_selection : MonoBehaviour
                 {
                     if (Input.GetKey(KeyCode.LeftShift)) //inclusive select
                     {
-                        selected_table.addSelected(hit.transform.gameObject);
+                        selected_table.invertSelected(hit.transform.gameObject);
                     }
                     else //exclusive selected
                     {
                         selected_table.deselectAll();
-                        selected_table.addSelected(hit.transform.gameObject);
+                        selected_table.invertSelected(hit.transform.gameObject);
                     }
                 }
                 else //if we didnt hit something
@@ -123,6 +123,14 @@ public class global_selection : MonoBehaviour
 
             dragSelect = false;
 
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            foreach(Virus v in FindObjectsOfType<Virus>())
+            {
+                selected_table.addSelected(v.gameObject);
+            }
         }
        
     }
