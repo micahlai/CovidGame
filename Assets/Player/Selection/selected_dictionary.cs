@@ -21,6 +21,15 @@ public class selected_dictionary : MonoBehaviour
             deselect(id);
         }
     }
+    public void deselectGO(GameObject go)
+    {
+        int id = go.GetInstanceID();
+
+        if (selectedTable.ContainsKey(id))
+        {
+            deselect(id);
+        }
+    }
     public void addSelected(GameObject go)
     {
         int id = go.GetInstanceID();

@@ -33,7 +33,7 @@ public class Virus : MonoBehaviour
         
         foreach (Person p in FindObjectsOfType<Person>())
         {
-            if (Vector3.Distance(p.transform.position, transform.position) < vision)
+            if (Vector3.Distance(p.transform.position, transform.position) < vision && InfectionCondition(p))
             {
                 Debug.DrawLine(transform.position, p.transform.position, Color.yellow);
 
@@ -44,6 +44,11 @@ public class Virus : MonoBehaviour
         if (target != null)
         {
             Debug.DrawLine(transform.position, target.transform.position, Color.green);
+            if (!(Vector3.Distance(target.transform.position, transform.position) < vision && InfectionCondition(target)))
+            {
+                target = null;
+
+            }
         }
         if (!controlled || MoveAttack) {
 
@@ -54,7 +59,7 @@ public class Virus : MonoBehaviour
                 {
                     NavMeshPath path = new NavMeshPath();
                     agent.CalculatePath(target.transform.position, path);
-                    print(path.status);
+
                     agent.SetPath(path);
                     Debug.DrawLine(transform.position, target.transform.position, Color.blue);
                 }
@@ -93,7 +98,7 @@ public class Virus : MonoBehaviour
     {
         foreach (Person p in FindObjectsOfType<Person>())
         {
-            if (Vector3.Distance(p.transform.position, transform.position) < vision)
+            if (Vector3.Distance(p.transform.position, transform.position) < vision && InfectionCondition(p))
             {
 
 
@@ -112,6 +117,33 @@ public class Virus : MonoBehaviour
 
         }
     }
+    bool InfectionCondition(Person p)
+    {
+        if(p.state == Person.State.Healthy)
+        {
+            return true;
+        }
+        else if (p.state == Person.State.Incubated)
+        {
+            return false;
+        }
+        else if (p.state == Person.State.Infected)
+        {
+            return false;
+        }
+        else if (p.state == Person.State.Vaccinated)
+        {
+            return true;
+        }
+        else if (p.state == Person.State.Immune)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
     void DrawCircle(Vector3 center, float radius, Color color)
     {
         Vector3 prevPos = center + new Vector3(radius, 0, 0);
@@ -121,6 +153,19 @@ public class Virus : MonoBehaviour
             Vector3 newPos = center + new Vector3(Mathf.Cos(angle) * radius, 0, Mathf.Sin(angle) * radius);
             Debug.DrawLine(prevPos, newPos, color);
             prevPos = newPos;
+        }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.GetComponent<Person>() != null)
+        {
+            if (other.GetComponent<Person>().state == Person.State.Healthy)
+            {
+                other.GetComponent<Person>().Infect();
+
+                FindObjectOfType<selected_dictionary>().deselectGO(gameObject);
+                Destroy(gameObject);
+            }
         }
     }
 }
